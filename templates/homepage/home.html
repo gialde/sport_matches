@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная — Спортивные матчи{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Спортивные матчи</h1>
+    <p class="lead">
+        Приложение показывает расписание и результаты матчей по футболу,
+        баскетболу и волейболу. Данные читаются из базы SQLite.
+    </p>
+</section>
+
+{% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+{% else %}
+    <section class="counter-block">
+        <p class="counter-label">Матчей в базе данных</p>
+        <p class="counter-value">{{ total_matches }}</p>
+    </section>
+{% endif %}
+
+<section class="home-links">
+    <a class="button-link" href="{% url 'court_list' %}">Перейти к площадкам</a>
+    <a class="button-link" href="{% url 'match_list' %}">Перейти к матчам</a>
+</section>
+{% endblock %}

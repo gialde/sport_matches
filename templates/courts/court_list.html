@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Площадки — Спортивные матчи{% endblock %}
+
+{% block content %}
+<h1>Площадки</h1>
+
+{% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+{% else %}
+    <p class="result-summary">Площадок в базе данных: <strong>{{ courts|length }}</strong></p>
+    <div class="court-grid">
+        {% for court in courts %}
+            <article class="court-card">
+                <h2 class="court-name">{{ court.name }}</h2>
+                <p class="court-fact"><span class="fact-label">Вместимость:</span> {{ court.capacity }} мест</p>
+                <p class="court-fact"><span class="fact-label">Покрытие:</span> {{ court.surface_type|capfirst }}</p>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <p>Площадки в базе данных не найдены.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

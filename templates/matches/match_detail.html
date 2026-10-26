@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if match %}{{ match.title }}{% else %}Матч{% endif %} — Спортивные матчи{% endblock %}
+
+{% block content %}
+{% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+{% elif match %}
+    <h1>{{ match.title }}</h1>
+    <section class="detail-section">
+        <h2>Матч</h2>
+        <dl class="details-list">
+            <dt>Вид спорта</dt><dd>{{ match.sport_type|capfirst }}</dd>
+            <dt>Дата и время</dt><dd>{{ match.match_date|date:"d.m.Y, H:i" }}</dd>
+            <dt>Длительность</dt><dd>{{ match.duration }} мин.</dd>
+            <dt>Количество билетов</dt><dd>{{ match.tickets }}</dd>
+            <dt>Статус</dt><dd>{{ match.status }}</dd>
+        </dl>
+    </section>
+    <section class="detail-section">
+        <h2>Площадка</h2>
+        <dl class="details-list">
+            <dt>Название</dt><dd>{{ match.court_name }}</dd>
+            <dt>Вместимость</dt><dd>{{ match.court_capacity }} мест</dd>
+            <dt>Тип покрытия</dt><dd>{{ match.court_surface_type|capfirst }}</dd>
+        </dl>
+    </section>
+{% endif %}
+<p><a class="button-link" href="{% url 'match_list' %}">Вернуться к списку матчей</a></p>
+{% endblock %}

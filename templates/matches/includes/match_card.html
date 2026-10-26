@@ -1,0 +1,25 @@
+<article class="match-card">
+    <div class="match-card-top">
+        <h2 class="match-title">
+            <a href="{% url 'match_detail' match.slug %}">{{ match.title }}</a>
+        </h2>
+        <span class="sport-badge">{{ match.sport_type|upper }}</span>
+    </div>
+
+    <ul class="match-facts">
+        <li><span class="fact-label">Дата:</span> {{ match.match_date|date:"d.m.Y, H:i" }}</li>
+        <li><span class="fact-label">Площадка:</span> {{ match.court_name }}</li>
+        <li><span class="fact-label">Длительность:</span> {{ match.duration }} мин.</li>
+        <li><span class="fact-label">Билетов:</span> {{ match.tickets }}</li>
+    </ul>
+
+    {% if match.status == 'запланирован' %}
+        <div class="status-block status-planned">Билеты в продаже</div>
+    {% elif match.status == 'идёт' %}
+        <div class="status-block status-live">Идёт игра</div>
+    {% elif match.status == 'завершён' %}
+        <div class="status-block status-finished">Игра завершена</div>
+    {% else %}
+        <div class="status-block status-unknown">{{ match.status }}</div>
+    {% endif %}
+</article>

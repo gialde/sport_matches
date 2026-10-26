@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика — Спортивные матчи{% endblock %}
+
+{% block content %}
+<h1>Статистика матчей</h1>
+
+{% for warning in warnings %}
+    <div class="alert alert-warning">{{ warning }}</div>
+{% endfor %}
+
+{% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+{% else %}
+    <p class="result-summary">Всего матчей в базе данных: <strong>{{ total_matches }}</strong></p>
+
+    <section class="stats-section">
+        <h2>Матчи по видам спорта</h2>
+        <table class="data-table">
+            <thead><tr><th>Вид спорта</th><th>Количество матчей</th></tr></thead>
+            <tbody>
+                {% for row in sport_counts %}
+                    <tr><td>{{ row.sport_type|capfirst }}</td><td>{{ row.match_count }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="stats-section">
+        <h2>Виды спорта с большим числом матчей</h2>
+        <form class="filter-form" method="get" action="{% url 'statistics' %}">
+            <div class="form-field">
+                <label for="min">Не менее матчей</label>
+                <input type="number" id="min" name="min" min="1" value="{{ threshold }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="button">Показать</button>
+                <a class="button-link" href="{% url 'statistics' %}">Сбросить</a>
+            </div>
+        </form>
+
+        <table class="data-table">
+            <thead><tr><th>Вид спорта</th><th>Количество матчей</th></tr></thead>
+            <tbody>
+                {% for row in sport_having %}
+                    <tr><td>{{ row.sport_type|capfirst }}</td><td>{{ row.match_count }}</td></tr>
+                {% empty %}
+                    <tr><td colspan="2">Нет видов спорта с числом матчей не менее {{ threshold }}.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endif %}
+{% endblock %}

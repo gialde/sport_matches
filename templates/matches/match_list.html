@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Матчи — Спортивные матчи{% endblock %}
+
+{% block content %}
+<h1>Матчи</h1>
+
+<form class="filter-form" method="get" action="{% url 'match_list' %}">
+    <div class="form-field">
+        <label for="tickets">Минимум билетов</label>
+        <input type="number" id="tickets" name="tickets" min="0" value="{{ min_tickets|default_if_none:'' }}">
+    </div>
+    <div class="form-field">
+        <label for="sort">Сортировать по</label>
+        <select id="sort" name="sort">
+            {% for option in sort_options %}
+                <option value="{{ option.value }}"{% if option.value == selected_sort %} selected{% endif %}>{{ option.label|capfirst }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-field">
+        <label for="dir">Направление</label>
+        <select id="dir" name="dir">
+            {% for option in direction_options %}
+                <option value="{{ option.value }}"{% if option.value == selected_direction %} selected{% endif %}>{{ option.label|capfirst }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-field">
+        <label for="limit">Не более записей (до {{ max_limit }})</label>
+        <input type="number" id="limit" name="limit" min="1" max="{{ max_limit }}" value="{{ limit|default_if_none:'' }}">
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="button">Применить</button>
+        <a class="button-link" href="{% url 'match_list' %}">Сбросить</a>
+    </div>
+</form>
+
+{% for warning in warnings %}
+    <div class="alert alert-warning">{{ warning }}</div>
+{% endfor %}
+
+{% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+{% else %}
+    <p class="result-summary">
+        Найдено матчей: <strong>{{ matches|length }}</strong>.
+        Сортировка: {{ sort_label }}, {{ direction_label }}.
+        {% if limit %}Показано не более {{ limit }} записей.{% endif %}
+    </p>
+
+    <div class="match-list">
+        {% for match in matches %}
+            {% include 'matches/includes/match_card.html' %}
+        {% empty %}
+            <div class="empty-state">
+                {% if min_tickets is not None %}
+                    <p>Матчей с количеством билетов не менее {{ min_tickets }} не найдено.</p>
+                {% else %}
+                    <p>В базе данных пока нет матчей.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
